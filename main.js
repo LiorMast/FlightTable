@@ -1,3 +1,5 @@
+/////////////////globals////////////////////////////////////////////////////////////////////
+
 let fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
 let currentView = jsonFlights;
 let currentpage = 1;
@@ -19,10 +21,18 @@ function createHeaders(){
     `
 }
 
+/////////////////////createtable//////////////////////////////////
+
 function buildTable(json){
     createHeaders();
+    let i = 1;
     for (const flight of json) {
         let row = document.createElement('tr');
+        row.id = "tr" + i;
+        i++;
+        row.setAttribute('onclick', 'createPopup(this)');
+        row.setAttribute('onmouseover', 'setSVGWhite(this)');
+        row.setAttribute('onmouseout', 'setSVGBlack(this)');
         if (flight['schedueTime'] != flight['actualTime']) {
             row.classList.add('timedelay')
         }
@@ -41,8 +51,6 @@ function addToRow(flight,key, row){
         
             row.classList.add(flight[key]);
             cell.innerHTML = addImage(flight[key]);
-        
-        // cell.appendChild(img);
         row.appendChild(cell);
         return;
     }else if (key == 'schedueTime' || key == 'actualTime') {
@@ -60,9 +68,11 @@ function formatTime(timestring){
  return res;
 }
 
+///////////////////////////image///////////////////////////////////
+
 function addImage(source){
     let svgD = `
-    <svg fill="#000000" height = 20 width = 40 version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+    <svg fill="#000000" height = 30  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	 viewBox="0 0 485.794 485.794" xml:space="preserve">
 <g>
 	<!-- <rect x="15.794" y="404.368" width="460" height="20"/> -->
@@ -78,7 +88,7 @@ function addImage(source){
 </svg>
     `
     let svgA =`
-    <svg fill="#000000" height = 20 width = 40 version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+    <svg fill="#000000" height = 30  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	 viewBox="0 0 493.378 493.378" xml:space="preserve">
 <g>
 	<path d="M456.294,308.726L456.294,308.726c-6.49-37.701-38.456-59.887-64.129-71.858l-76.396-35.623L281.919,58.042L228.807,0
@@ -116,6 +126,16 @@ function addImage(source){
         return svgD;
     }
 }
+
+function setSVGWhite(element){
+    return element.querySelector("svg").style.fill = 'white'
+}
+
+function setSVGBlack(element){
+    return element.querySelector("svg").style.fill = 'black'
+}
+
+//////////////////////////sort//////////////////////////////
 
 function compareNames(a, b, field) {
     const nameA = a[field].toLowerCase();
@@ -162,7 +182,7 @@ function sortBy(column){
 }
 
 
-////////page selector/////////////
+//////////////page selector///////////////////////////
 
 function switchPage(page){
     currentpage = page;
@@ -176,7 +196,7 @@ function getPageCount(){
 }
 
 function getPageInfo(){
-    document.querySelector('.pageSelector span').innerText = "Showing Page "+currentpage+" of " + getPageCount() + " Entries " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " to " + document.getElementById('viewsSelector').value*(currentpage) + " of " + currentView.length;
+    document.querySelector('.pageSelector span').innerText = "Showing Page "+currentpage+" of " + getPageCount() + " Entries " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " to " + (currentpage === getPageCount() ? currentView.length:document.getElementById('viewsSelector').value*(currentpage)) + " of " + currentView.length;
 }
 
 function getPageLinks(){
@@ -194,10 +214,27 @@ function getPageLinks(){
     document.querySelector('.pageSelector').appendChild(pageList);
 }
 
+//////////////////////popup///////////////////////////////
+
+function createPopup(element){
+    if(document.getElementById('popup')) document.getElementById('popup').remove();
+    let popup = document.createElement('div');
+    popup.id = 'popup';
+    let details = document.createElement('p');
+    let info = currentView[document.getElementById('viewsSelector').value*(currentpage-1)+parseInt(element.id.slice(2))-1];
+    for (const key in info) {
+        details.innerText += key + ":" + info[key] + "\n";
+    }
+    popup.appendChild(details);
+    element.appendChild(popup);
+    
+
+}
+
 //////////////////////refresh/////////////////////////////
 
 function refresh() {
-    buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage), currentView));
+    buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage)>currentView.length ? currentView.length:document.getElementById('viewsSelector').value*(currentpage), currentView));
     getPageInfo();
     getPageLinks();
 }
