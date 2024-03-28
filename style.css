@@ -85,3 +85,8 @@ body{
 .seatchBox{
     display: flexbox;
 }
+
+li{
+    list-style-type: none;
+    display: inline-block;
+}

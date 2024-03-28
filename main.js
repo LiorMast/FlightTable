@@ -1,5 +1,6 @@
 let fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
 let currentView = jsonFlights;
+let currentpage = 1;
 
 function createHeaders(){
     document.querySelector('.flighttable').innerHTML = `
@@ -144,6 +145,7 @@ function sortBy(column){
             currentView = [...jsonFlights].sort((a,b) => compareNamesAsc(a,b,column.id));
         }
 
+        refresh();
         document.getElementById(column.id).childNodes[1].innerHTML = "⇑";
     } else {
         document.getElementById('maintable').remove();
@@ -156,16 +158,49 @@ function sortBy(column){
         refresh();
         document.getElementById(column.id).childNodes[1].innerHTML = "⇓";
     }
+    
 }
 
 
 ////////page selector/////////////
 
+function switchPage(page){
+    currentpage = page;
+    refresh();
+}
+
 function getEntries(start, end ,json){return [...json].slice(start,end);}
 
+function getPageCount(){
+    return Math.ceil(jsonFlights.length/document.getElementById('viewsSelector').value);
+}
 
+function getPageInfo(){
+    document.querySelector('.pageSelector span').innerText = "Showing Page "+currentpage+" of " + getPageCount() + " Entries " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " to " + document.getElementById('viewsSelector').value*(currentpage) + " of " + currentView.length;
+}
 
-// buildTable([...jsonFlights].slice(10,20));
-function refresh() {buildTable(getEntries(0,document.getElementById('viewsSelector').value, currentView));}
+function getPageLinks(){
+    if(document.getElementById('pageList')) document.getElementById('pageList').remove();
+    let pageList = document.createElement('ul');
+    pageList.id = 'pageList';
+    for (let i = 1; i < getPageCount()+1; i++) {
+        let pageLink = document.createElement('li');
+        let btn = document.createElement('button');
+        btn.textContent = i;
+        btn.setAttribute('onclick','switchPage('+i+')');
+        pageLink.appendChild(btn);
+        pageList.appendChild(pageLink);
+    }
+    document.querySelector('.pageSelector').appendChild(pageList);
+}
+
+//////////////////////refresh/////////////////////////////
+
+function refresh() {
+    buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage), currentView));
+    getPageInfo();
+    getPageLinks();
+}
 
 refresh();
+

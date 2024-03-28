@@ -30,7 +30,7 @@
     </div>
         <div class="viewsSelector">
             <span>Entries Per Page: </span>
-            <select name="viewsSelector" id="viewsSelector" placeholder="10">
+            <select name="viewsSelector" id="viewsSelector" placeholder="10" onchange="switchPage(1)">
                 <option value="10" selected>10</option>
                 <option value="25">25</option>
                 <option value="50">50</option>
@@ -40,6 +40,7 @@
             <div class="flighttable">
             </div>
             <div class="pageSelector">
+                <span></span>
             </div>
     </div>
 
