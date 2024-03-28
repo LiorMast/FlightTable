@@ -1,10 +1,21 @@
 body{
     font-family:'Courier New', Courier, monospace;
     text-align: center;
+    /* margin: 0px;
+    padding: 0px; */
 }
 
-#maintable td{
+/* #maintable td{
 
+} */
+
+.flighttable{
+    display: flex;
+    justify-content: center;
+}
+
+.flighttable table{
+     width: 95%;  
 }
 
 #maintable tr.A{
@@ -19,10 +30,13 @@ body{
     color: white;
     font-weight: bold;
     cursor: pointer;
+    
 }
 
-#maintable img:hover{
+#maintable svg:hover{
     fill: white;
+    stroke: white;
+    stroke-width: 5px;
 
 }
 
@@ -33,6 +47,7 @@ body{
 #maintable th{
     background-color: gray;
     color: white;
+    padding-left: 15px;
 }
 
 
@@ -40,7 +55,7 @@ body{
     border: 0px;
     background:none;
     color: white;
-    /* width: 100%; */
+    width: 15px;
     font-family:'Courier New', Courier, monospace;
     font-weight: bold;
 }
@@ -49,4 +64,24 @@ body{
     cursor:pointer;
 }
 
+.selectBox{
+    position: relative;
+    width: 300px;
+}
+.select-items{
+    background-color: blue;
+}
+.select-selected:after{
+    position: absolute;
+    border-color: aliceblue;
+}
 
+
+.viewSelector{
+    text-align: left;
+    padding-left: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.seatchBox{
+    display: flexbox;
+}
