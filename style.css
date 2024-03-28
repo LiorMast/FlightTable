@@ -1,0 +1,52 @@
+body{
+    font-family:'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+#maintable td{
+
+}
+
+#maintable tr.A{
+    background-color: cyan;
+}
+#maintable tr.D{
+    background-color: greenyellow;
+}
+
+#maintable tr:hover{
+    background-color: rgb(155, 6, 185) !important;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#maintable img:hover{
+    fill: white;
+
+}
+
+.timedelay{
+    background-color: rgb(248, 189, 79) !important;
+}
+
+#maintable th{
+    background-color: gray;
+    color: white;
+}
+
+
+#maintable th button{
+    border: 0px;
+    background:none;
+    color: white;
+    /* width: 100%; */
+    font-family:'Courier New', Courier, monospace;
+    font-weight: bold;
+}
+
+#maintable th button:hover{
+    cursor:pointer;
+}
+
+
