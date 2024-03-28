@@ -139,20 +139,21 @@ function compareType(a,b) {return compareNames(a, b, 'operatorLong')}
 function sortBy(column){
     if (column.childNodes[1].innerHTML === "⇓") {
         if (column.id == 'number' || column.id == 'terminal') {
-            buildTable([...jsonFlights].sort((a,b) => compareNumbersAsc(a,b,column.id)));
+            currentView = [...jsonFlights].sort((a,b) => compareNumbersAsc(a,b,column.id));
         } else {
-            buildTable([...jsonFlights].sort((a,b) => compareNamesAsc(a,b,column.id)));
+            currentView = [...jsonFlights].sort((a,b) => compareNamesAsc(a,b,column.id));
         }
 
         document.getElementById(column.id).childNodes[1].innerHTML = "⇑";
     } else {
         document.getElementById('maintable').remove();
         if (column.id == 'number' || column.id == 'terminal') {
-            buildTable([...jsonFlights].sort((a,b) => compareNumbers(a,b,column.id)));
+            currentView = [...jsonFlights].sort((a,b) => compareNumbers(a,b,column.id));
         } else {
-            buildTable([...jsonFlights].sort((a,b) => compareNames(a,b,column.id)));
+            currentView = [...jsonFlights].sort((a,b) => compareNames(a,b,column.id));
         }
-    
+        
+        refresh();
         document.getElementById(column.id).childNodes[1].innerHTML = "⇓";
     }
 }
@@ -165,4 +166,6 @@ function getEntries(start, end ,json){return [...json].slice(start,end);}
 
 
 // buildTable([...jsonFlights].slice(10,20));
-buildTable(getEntries(0,document.getElementById('viewsSelector').value, currentView));
+function refresh() {buildTable(getEntries(0,document.getElementById('viewsSelector').value, currentView));}
+
+refresh();
