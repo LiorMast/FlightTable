@@ -1,6 +1,6 @@
 /////////////////globals////////////////////////////////////////////////////////////////////
 
-let fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
+const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
 let currentView = jsonFlights;
 let currentpage = 1;
 
@@ -253,7 +253,68 @@ function refresh() {
     buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage)>currentView.length ? currentView.length:document.getElementById('viewsSelector').value*(currentpage), currentView));
     getPageInfo();
     getPageLinks();
+    setUniqueLists();
 }
 
 refresh();
 
+//Alon
+var searchBtn = document.getElementById("searchBtn");
+
+var departureBtn = document.getElementById("departures");
+var ingoing = document.getElementById("ingoing");
+
+departureBtn.style.backgroundColor="white";
+ingoing.style.backgroundColor="white";
+function isValidSearch(){
+
+    var txtBox = document.getElementById("flightNum");
+
+    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").value.trim()==="בחר מהרשימה..."&& document.getElementById("airport_search").value.trim()==="בחר מהרשימה..."&& document.getElementById("terminal_search").value.trim()==="בחר מהרשימה..."){
+        searchBtn.disabled=true;
+    }
+    else{
+        searchBtn.disabled=false;
+    }
+}
+
+function clicked_btn(inp) {
+    if(inp.style.backgroundColor == "white")
+    {
+        inp.style.backgroundColor = "yellow";
+    }
+    
+    else{
+        inp.style.backgroundColor = "white";
+    }
+}
+
+function getUnique(type){
+    let unique = new Set();
+    for (const flight of jsonFlights) {
+        unique.add(flight[type])
+    }
+    return unique;   
+}
+
+function setUniqueList(type, listid){
+     let unique = getUnique(type);
+     let lst = document.getElementById(listid);
+     lst.classList.add('dir-right')
+     let optn = document.createElement('option');
+     optn.value = ""
+     optn.innerText = "בחר מהרשימה...";
+     lst.appendChild(optn);
+     for (const i of unique) {
+        optn = document.createElement('option');
+        optn.value = i;
+        optn.innerText = i;
+        lst.appendChild(optn);
+     }
+}
+
+function setUniqueLists(){
+    setUniqueList('operatorLong', "airline_company");
+    setUniqueList('airport', "airport_search");
+    setUniqueList('terminal', "terminal_search");
+}
