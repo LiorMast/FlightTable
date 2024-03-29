@@ -8,14 +8,14 @@ function createHeaders(){
     document.querySelector('.flighttable').innerHTML = `
     <table id="maintable">
         <tr>
-            <th onclick="sortBy(this)" id="`+fields[0]+`">Type<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[1]+`">Airline<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[2]+`">Flight Number<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[3]+`">Scheduled Time<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[4]+`">Estimated Time<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[5]+`">Destination<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[6]+`">Terminal<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[7]+`">Status<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th>
+            <th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th>
         </tr>
     </table>
     `
@@ -47,14 +47,12 @@ function buildTable(json){
 function addToRow(flight,key, row){
     let cell = document.createElement('td');
     if (key == 'type') {
-        let img;
-        
             row.classList.add(flight[key]);
             cell.innerHTML = addImage(flight[key]);
-        row.appendChild(cell);
-        return;
     }else if (key == 'schedueTime' || key == 'actualTime') {
         cell.innerHTML = formatTime(flight[key]);
+    }else if (key == 'number') {
+        cell.innerHTML = flight['operatorShort'] + " " + flight[key];
     }else{
         cell.innerHTML = flight[key];   
     }
@@ -64,7 +62,8 @@ function addToRow(flight,key, row){
 
 function formatTime(timestring){
  let time = timestring.split(/\D+/);
- let res = time[2]+"/"+time[1]+"/"+time[0]+" "+time[3]+":"+time[4];
+//  let res = time[2]+"/"+time[1]+"/"+time[0]+" "+time[3]+":"+time[4];
+ let res = time[3]+":"+time[4]+" "+time[2]+"/"+time[1]+"/"+time[0];
  return res;
 }
 
@@ -181,7 +180,6 @@ function sortBy(column){
     
 }
 
-
 //////////////page selector///////////////////////////
 
 function switchPage(page){
@@ -196,7 +194,7 @@ function getPageCount(){
 }
 
 function getPageInfo(){
-    document.querySelector('.pageSelector span').innerText = "Showing Page "+currentpage+" of " + getPageCount() + " Entries " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " to " + (currentpage === getPageCount() ? currentView.length:document.getElementById('viewsSelector').value*(currentpage)) + " of " + currentView.length;
+    document.querySelector('.pageSelector span').innerText = "מציג עמוד "+currentpage+" מתוך " + getPageCount() + ", שורות " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " עד " + (currentpage === getPageCount() ? currentView.length:document.getElementById('viewsSelector').value*(currentpage)) + " מתוך " + currentView.length;
 }
 
 function getPageLinks(){
@@ -205,12 +203,20 @@ function getPageLinks(){
     pageList.id = 'pageList';
     for (let i = 1; i < getPageCount()+1; i++) {
         let pageLink = document.createElement('li');
-        let btn = document.createElement('button');
-        btn.textContent = i;
-        btn.setAttribute('onclick','switchPage('+i+')');
-        pageLink.appendChild(btn);
+        let rdobtn = document.createElement('input');
+        let lbl = document.createElement('label');
+        rdobtn.id = 'rdobtn' + i;
+        rdobtn.name = 'pageLinks';
+        rdobtn.value = i;
+        rdobtn.type = 'radio';
+        lbl.textContent = i;
+        lbl.for = rdobtn.id;
+        rdobtn.setAttribute('onclick','switchPage('+i+')');
+        pageLink.appendChild(rdobtn);
+        pageLink.appendChild(lbl);
         pageList.appendChild(pageLink);
     }
+    
     document.querySelector('.pageSelector').appendChild(pageList);
 }
 
@@ -221,12 +227,22 @@ function createPopup(element){
     let popup = document.createElement('div');
     popup.id = 'popup';
     let details = document.createElement('p');
+    let btn = document.createElement('button');
+    btn.textContent = 'סגור'
+    btn.setAttribute('onclick','document.getElementById("popup").remove()')
     let info = currentView[document.getElementById('viewsSelector').value*(currentpage-1)+parseInt(element.id.slice(2))-1];
     for (const key in info) {
-        details.innerText += key + ":" + info[key] + "\n";
+        details.innerText += key + ": " + info[key] + " ";
     }
     popup.appendChild(details);
-    element.appendChild(popup);
+    popup.innerHTML += `
+    <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="45px" height="45px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM8.96965 8.96967C9.26254 8.67678 9.73742 8.67678 10.0303 8.96967L12 10.9394L13.9696 8.96969C14.2625 8.6768 14.7374 8.6768 15.0303 8.96969C15.3232 9.26258 15.3232 9.73746 15.0303 10.0303L13.0606 12L15.0303 13.9697C15.3232 14.2625 15.3232 14.7374 15.0303 15.0303C14.7374 15.3232 14.2625 15.3232 13.9696 15.0303L12 13.0607L10.0303 15.0303C9.73744 15.3232 9.26256 15.3232 8.96967 15.0303C8.67678 14.7374 8.67678 14.2626 8.96967 13.9697L10.9393 12L8.96965 10.0303C8.67676 9.73744 8.67676 9.26256 8.96965 8.96967Z" fill="#1C274C"/>
+</svg>
+    `
+    popup.querySelector('svg').setAttribute('onclick', 'document.getElementById("popup").remove()');
+    document.body.appendChild(popup);
     
 
 }
