@@ -15,33 +15,33 @@
             <div class="row">
                 <div class="col-4 ">
                     <p>מספר טיסה</p>
-                    <input oninput="isValid()" id="flightNum" type="text" placeholder="מספר...">
+                    <input oninput="isValidSearch()" id="flightNum" type="text" placeholder="מספר...">
                 </div>
                 <div class="col-4">
                     <p>תאריך יציאה</p>
-                    <input type="date" name="" id="from_date" min="2024-01-01">
+                    <input type="date" name="" id="from_date" min="2024-01-01" onchange="isValidSearch()">
                 </div>
                 <div class="col-4">
                     <p>תאריך חזרה</p>
-                    <input type="date" name="" id="to_date" min="2024-01-01">
+                    <input type="date" name="" id="to_date" min="2024-01-01" onchange="isValidSearch()">
                 </div>
                 <div class="col-4 mt-5">
                     <p>חברת תעופה</p>
-                    <select name="" id="airline_company"></select>
+                    <select name="" id="airline_company" onchange="isValidSearch()"></select>
                 </div>
                 
                 <div class="col-4 mt-5">
                     <p>שדה תעופה</p>
-                    <select name="" id="airport_search"></select>                    
+                    <select name="" id="airport_search" onchange="isValidSearch()"></select>                    
                 </div>
                 <div class="col-4 mt-5">
                     <p>טרמינל</p>
-                    <select name="" id="terminal_search"></select>  
+                    <select name="" id="terminal_search" onchange="isValidSearch()"></select>  
                 </div>
             </div>
             <div class="row mt-5">
                 <div class="col-8 " id="search_button">
-                <button type="button" id="searchBtn" onclick="search();" disabled ><img src="./images/magnifying-glass-search-svgrepo-com.svg" alt=""></button>
+                <button type="button" id="searchBtn" onclick="search();" disabled="disabled" ><img src="./images/magnifying-glass-search-svgrepo-com.svg" alt=""></button>
                 </div>
                 <div class="col-4 checkers">
                     <button id="departures" onclick="clicked_btn(this);isValidSearch();"><img src="./images/D.svg" alt=""><h6>יוצאות</h6></button>
@@ -49,6 +49,7 @@
                 </div>
             </div>
         </div>
+        <button type="button" id="wavebtn" onclick="toggleWave()">🌊</button>
     </div>
         <div class="viewsSelector">
             <span>שורות לעמוד: </span>
@@ -62,7 +63,6 @@
             <div class="flighttable">
             </div>
             <div class="pageSelector">
-                <span></span>
             </div>
     </div>
 

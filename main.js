@@ -3,28 +3,32 @@
 const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
 let currentView = jsonFlights;
 let currentpage = 1;
+let waveActive = false;
+let popupActive = false;
 
-function createHeaders(){
-    document.querySelector('.flighttable').innerHTML = `
-    <table id="maintable">
-        <tr>
-            <th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th>
-            <th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th>
-        </tr>
-    </table>
-    `
+
+const searchBtn = document.getElementById("searchBtn");
+const departureBtn = document.getElementById("departures");
+const ingoing = document.getElementById("ingoing");
+
+function init(){
+    setUniqueLists();
+    departureBtn.style.backgroundColor="white";
+    ingoing.style.backgroundColor="white";
+    switchPage(1);
 }
-
 /////////////////////createtable//////////////////////////////////
 
 function buildTable(json){
-    createHeaders();
+    let maintable = document.createElement('table');
+    maintable.id = 'maintable';
+    if (document.getElementById('maintable')) {
+        let headers = document.getElementById('tableHeaders');
+        document.getElementById('maintable').remove();
+        maintable.appendChild(headers);
+    }else{
+        maintable.innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th></tr>`;
+    }
     let i = 1;
     for (const flight of json) {
         let row = document.createElement('tr');
@@ -39,8 +43,9 @@ function buildTable(json){
         for (const field of fields) {
             addToRow(flight,field, row);
         }
-        document.getElementById('maintable').appendChild(row);   
+        maintable.appendChild(row);
     }
+    document.querySelector('.flighttable').appendChild(maintable);
     
 }
 
@@ -62,7 +67,6 @@ function addToRow(flight,key, row){
 
 function formatTime(timestring){
  let time = timestring.split(/\D+/);
-//  let res = time[2]+"/"+time[1]+"/"+time[0]+" "+time[3]+":"+time[4];
  let res = time[3]+":"+time[4]+" "+time[2]+"/"+time[1]+"/"+time[0];
  return res;
 }
@@ -154,28 +158,39 @@ function compareNames(a, b, field) {
 function compareNumbers(a, b, field) {return a[field] - b[field];}
 function compareNumbersAsc(a, b, field) {return b[field] - a[field];}
 
-function compareType(a,b) {return compareNames(a, b, 'operatorLong')}
+// function compareType(a,b) {return compareNames(a, b, 'operatorLong')}
 
 function sortBy(column){
-    if (column.childNodes[1].innerHTML === "⇓") {
+    if (column.childNodes[1].innerHTML === "🔽") {
         if (column.id == 'number' || column.id == 'terminal') {
             currentView = [...jsonFlights].sort((a,b) => compareNumbersAsc(a,b,column.id));
         } else {
             currentView = [...jsonFlights].sort((a,b) => compareNamesAsc(a,b,column.id));
         }
 
-        refresh();
-        document.getElementById(column.id).childNodes[1].innerHTML = "⇑";
+        refreshHeaders();
+        switchPage(currentpage);
+
+        document.getElementById(column.id).childNodes[1].innerHTML = "🔼";
     } else {
-        document.getElementById('maintable').remove();
+        
         if (column.id == 'number' || column.id == 'terminal') {
             currentView = [...jsonFlights].sort((a,b) => compareNumbers(a,b,column.id));
         } else {
             currentView = [...jsonFlights].sort((a,b) => compareNames(a,b,column.id));
         }
+        refreshHeaders();
+        switchPage(currentpage);
         
-        refresh();
-        document.getElementById(column.id).childNodes[1].innerHTML = "⇓";
+        document.getElementById(column.id).childNodes[1].innerHTML = "🔽";
+    }
+
+    function refreshHeaders(){
+        for (const i of document.getElementById('tableHeaders').childNodes) {
+            if ((i.childNodes[1].innerHTML === "🔽" || i.childNodes[1].innerHTML === "🔼") && i.id != column.id) {
+                i.childNodes[1].innerHTML = "";
+            }
+        }
     }
     
 }
@@ -184,21 +199,27 @@ function sortBy(column){
 
 function switchPage(page){
     currentpage = page;
+    document.querySelector('.pageSelector').removeAttribute('style');
     refresh();
+    document.getElementById('rdobtn'+page).checked = true;
 }
 
 function getEntries(start, end ,json){return [...json].slice(start,end);}
 
 function getPageCount(){
-    return Math.ceil(jsonFlights.length/document.getElementById('viewsSelector').value);
+    return Math.ceil(currentView.length/document.getElementById('viewsSelector').value);
 }
 
 function getPageInfo(){
-    document.querySelector('.pageSelector span').innerText = "מציג עמוד "+currentpage+" מתוך " + getPageCount() + ", שורות " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " עד " + (currentpage === getPageCount() ? currentView.length:document.getElementById('viewsSelector').value*(currentpage)) + " מתוך " + currentView.length;
+    return "מציג עמוד "+currentpage+" מתוך " + getPageCount() + ", שורות " + (document.getElementById('viewsSelector').value*(currentpage-1)+1) + " עד " + (currentpage === getPageCount() ? currentView.length:document.getElementById('viewsSelector').value*(currentpage)) + " מתוך " + currentView.length;
 }
 
 function getPageLinks(){
     if(document.getElementById('pageList')) document.getElementById('pageList').remove();
+    if(document.getElementById('infotxt')) document.getElementById('infotxt').remove();
+    let info = document.createElement('p');
+    info.id = 'infotxt';
+    info.textContent = getPageInfo();
     let pageList = document.createElement('ul');
     pageList.id = 'pageList';
     for (let i = 1; i < getPageCount()+1; i++) {
@@ -211,12 +232,13 @@ function getPageLinks(){
         rdobtn.type = 'radio';
         lbl.textContent = i;
         lbl.for = rdobtn.id;
-        rdobtn.setAttribute('onclick','switchPage('+i+')');
+        lbl.setAttribute('onclick','switchPage('+i+')');
         pageLink.appendChild(rdobtn);
         pageLink.appendChild(lbl);
         pageList.appendChild(pageLink);
     }
     
+    document.querySelector('.pageSelector').appendChild(info);
     document.querySelector('.pageSelector').appendChild(pageList);
 }
 
@@ -225,47 +247,65 @@ function getPageLinks(){
 function createPopup(element){
     if(document.getElementById('popup')) document.getElementById('popup').remove();
     let popup = document.createElement('div');
+    let popupDetails = document.createElement('div');
+    let title = document.createElement('h3');
+    popupDetails.id = 'popupDetails'
     popup.id = 'popup';
-    let details = document.createElement('p');
-    let btn = document.createElement('button');
-    btn.textContent = 'סגור'
-    btn.setAttribute('onclick','document.getElementById("popup").remove()')
     let info = currentView[document.getElementById('viewsSelector').value*(currentpage-1)+parseInt(element.id.slice(2))-1];
+
+    popupDetails.innerHTML += `<h6>קוד חברת התעופה: </h6><h6>מספר הטיסה: </h6><h6>שם מלא של חברת התעופה: </h6><h6>זמן מתוכנן: </h6><h6>זמן בפועל: </h6><h6>סוג הטיסה: </h6><h6>קוד נמל התעופה ביעד / במקור: </h6><h6>שם שדה התעופה ביעד / במקור: </h6><h6>שם העיר ביעד / במקור: </h6><h6>ארץ היעד / המקור: </h6><h6>טרמינל: </h6><h6>דלפק לביצוע צ'ק אין: </h6><h6>איזור הדלפק: </h6><h6>סטטוס: </h6>`;
+    let titles = popupDetails.childNodes
+    let i = 0;
     for (const key in info) {
-        details.innerText += key + ": " + info[key] + " ";
+        titles[i].innerText += info[key];
+        i++;
     }
-    popup.appendChild(details);
+    popup.appendChild(title);
+    popup.appendChild(popupDetails);
     popup.innerHTML += `
     <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
 <svg width="45px" height="45px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22ZM8.96965 8.96967C9.26254 8.67678 9.73742 8.67678 10.0303 8.96967L12 10.9394L13.9696 8.96969C14.2625 8.6768 14.7374 8.6768 15.0303 8.96969C15.3232 9.26258 15.3232 9.73746 15.0303 10.0303L13.0606 12L15.0303 13.9697C15.3232 14.2625 15.3232 14.7374 15.0303 15.0303C14.7374 15.3232 14.2625 15.3232 13.9696 15.0303L12 13.0607L10.0303 15.0303C9.73744 15.3232 9.26256 15.3232 8.96967 15.0303C8.67678 14.7374 8.67678 14.2626 8.96967 13.9697L10.9393 12L8.96965 10.0303C8.67676 9.73744 8.67676 9.26256 8.96965 8.96967Z" fill="#1C274C"/>
 </svg>
     `
-    popup.querySelector('svg').setAttribute('onclick', 'document.getElementById("popup").remove()');
+    popup.querySelector('svg').setAttribute('onclick', 'closePopup()');
     document.body.appendChild(popup);
-    
+    showPopup();
+    function showPopup(){
+        if (!popupActive) {
+            popup.setAttribute('style','animation: rolldown 0.5s ease-in-out forwards');
+        }
+        else{
+            popup.setAttribute('style','transform: translateY(-15px)');
 
+        }
+        popupActive = true;
+    }
+}
+
+function closePopup(){
+    popup.setAttribute('style','animation: rollup 0.5s ease-in-out forwards');
+
+    setTimeout(function(){document.getElementById('popup').remove()},1000)
+    popupActive = false;
 }
 
 //////////////////////refresh/////////////////////////////
 
 function refresh() {
     buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage)>currentView.length ? currentView.length:document.getElementById('viewsSelector').value*(currentpage), currentView));
-    getPageInfo();
     getPageLinks();
-    setUniqueLists();
+    if (waveActive) startWave();    
+    
+    
 }
 
-refresh();
 
-//Alon
-var searchBtn = document.getElementById("searchBtn");
 
-var departureBtn = document.getElementById("departures");
-var ingoing = document.getElementById("ingoing");
+////////////////////////////search/////////////////////////////
 
-departureBtn.style.backgroundColor="white";
-ingoing.style.backgroundColor="white";
+
+
 function isValidSearch(){
 
     var txtBox = document.getElementById("flightNum");
@@ -317,4 +357,109 @@ function setUniqueLists(){
     setUniqueList('operatorLong', "airline_company");
     setUniqueList('airport', "airport_search");
     setUniqueList('terminal', "terminal_search");
+}
+
+function getSearchResults(field, term){
+let results = new Array();
+    for (const flight of jsonFlights) {
+        if (flight[field] == term) {
+            results.push(flight);
+        }
+    }
+
+    return results;
+}
+
+function showSearchResults(){
+    currentView = search(field, term);
+    switchPage(1);
+}
+
+/////////////////////wave animation//////////////////////////////////
+
+function startWave(){
+    let rows = Array.from(document.querySelectorAll('#maintable tr'))
+    rows.push(document.querySelector('.pageSelector'))
+    let delay = 0;
+    for (const row of rows) {
+        row.setAttribute('style','animation: side2side 1.3s infinite '+delay+'s ease-in-out;');
+        delay+=0.05;    
+    }
+}
+
+function stopWave(){
+    let rows = Array.from(document.querySelectorAll('#maintable tr'))
+    rows.push(document.querySelector('.pageSelector'))
+    for (const row of rows) {
+        row.removeAttribute('style');
+    }
+}
+
+function toggleWave(){
+    if (waveActive) {
+        stopWave();
+    } else {
+        startWave();
+    }
+    waveActive = !waveActive;    
+}
+
+/////////////////////init function call//////////////////////////////
+init();
+
+/////////////////////////////////////////////////////////////////////
+function isValidSearch(){
+
+    var txtBox = document.getElementById("flightNum");
+
+    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && 
+    ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
+    document.getElementById("airport_search").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
+    document.getElementById("terminal_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
+    document.getElementById("from_date").value===""&&
+    document.getElementById("to_date").value===""){
+        searchBtn.disabled=true;
+    }
+    else{
+        searchBtn.disabled=false;
+    }
+}
+
+function search(){
+    var flightNum = document.getElementById("flightNum").value.trim();
+    console.log(flightNum);
+
+    var terminal = document.getElementById("terminal_search");
+    var terminalIndex = terminal.selectedIndex;
+    var terminalVal = terminal[terminalIndex].value; 
+    console.log(terminalVal);
+
+    var airport = document.getElementById("airport_search");
+    var airportIndex = airport.selectedIndex;
+    var airportlVal = airport[airportIndex].value; 
+    console.log(airportlVal);
+
+    var airlineCompany = document.getElementById("airline_company");
+    var airlineCompanyIndex = airlineCompany.selectedIndex;
+    var airlineCompanylVal = airlineCompany[airlineCompanyIndex].value; 
+    console.log(airlineCompanylVal);
+
+    var leavingDate = document.getElementById("from_date").value;
+    console.log(leavingDate)
+
+    var returnDate = document.getElementById("to_date").value;
+    console.log(returnDate)
+    
+    var departing;
+    if(document.getElementById("departures").style.backgroundColor==="yellow"){
+        departing=true;
+    }
+    else{departing=false;}
+    var ingoing;
+    if(document.getElementById("ingoing").style.backgroundColor==="yellow"){
+        ingoing=true;
+    }
+    else{ingoing=false;}
+    console.log(departing);
+    console.log(ingoing);
 }

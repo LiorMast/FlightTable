@@ -4,17 +4,11 @@ body{
     text-align: center;
     background-image: url("./images/backgroundplane.jpeg");
     background-size: cover;
-    /* color: white; */
-    /* text-shadow: 0 2px black; */
-    /* text-shadow: 0 -2px black; */
-    /* font-weight: bold; */
-    /* margin: 0px;
-    padding: 0px; */
 }
 
-/* #maintable td{
-
-} */
+#maintable{
+    opacity: 90%;
+}
 
 .flighttable{
     display: flex;
@@ -25,15 +19,16 @@ body{
      width: 95%;  
 }
 
+
 #maintable tr.A{
-    background-color: cyan;
+    background-color: lightblue;
 }
 #maintable tr.D{
-    background-color: greenyellow;
+    background-color:azure;
 }
 
 #maintable tr:hover{
-    background-color: rgb(155, 6, 185) !important;
+    background-color: rgb(21, 119, 231) !important;
     color: white;
     font-weight: bold;
     cursor: pointer;
@@ -53,8 +48,9 @@ body{
 }
 
 #maintable th{
-    background-color: gray;
-    color: white;
+    box-shadow: inset 0 0 7px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    color: black;
     padding-left: 15px;
 }
 
@@ -62,7 +58,7 @@ body{
 #maintable th button{
     border: 0px;
     background:none;
-    color: white;
+    color: black;
     width: 15px;
     font-family:'Courier New', Courier, monospace;
     font-weight: bold;
@@ -91,12 +87,21 @@ li{
 z-index: 99;
 padding-bottom: 10px;
 padding-top: 15px;
+min-width: 80%;
 position: fixed;
 top: 0%;
-left: 50%;
-transform: translate(-50%, -15px); 
-background-color: rgb(211, 211, 211);
+left: 12.5%;
+transform: translate(-50%, -100%); 
+background-color: lightskyblue;
 border-radius: 15px;
+}
+
+#popupDetails{
+text-align: center;
+display: grid;
+font-weight: bold;
+grid-template-columns: repeat(3, 1fr);
+grid-template-rows: repeat(2, 1fr);
 }
 
 #popup path:hover{
@@ -104,6 +109,10 @@ border-radius: 15px;
     fill: white;
 }
 
+#popup path{
+    text-align: center;
+    padding: 50%;
+}
 #pageList label{
     background: none;
     font-weight: bold;
@@ -122,7 +131,8 @@ border-radius: 15px;
 }
 
 #pageList input[type="radio"]:checked + label {
-    background-color: #ff0000;  /* Change background for selected option */
+    background-color: rgb(21, 119, 231);
+    color: white;
   }
 
 
@@ -154,7 +164,7 @@ p{
     color: black;
 }
 
-#searchDiv, #pageList{
+#searchDiv{
     background-color: rgb(185, 236, 236);
     opacity: 90%;
     direction: ltr;
@@ -186,3 +196,41 @@ input{
 .dir-right{
     direction: rtl;
 }
+
+.pageSelector{
+    background-color: white;
+    direction: ltr;
+    opacity: 50%;
+    max-width: 95%;
+    margin: auto;
+
+}
+
+@keyframes side2side {
+    0% { transform: translateX(30px); }
+    50% { transform: translateX(-30px); }
+    100% { transform: translateX(30px);  }
+  }
+
+  @keyframes rolldown {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(-15px); } 
+  }
+
+  @keyframes rollup {
+    from { transform: translateY(-15px); }
+    to { transform: translateY(-100%); } 
+  }
+
+  #wavebtn{
+    border-radius: 50%;
+    background-color: rgb(21, 119, 231);
+    border: none;
+    font-size:xx-large;
+    min-height: 50px;
+    min-width: 50px;
+  }
+
+  #wavebtn:hover{
+    filter: brightness(1.15);
+  }
