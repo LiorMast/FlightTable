@@ -158,7 +158,6 @@ function compareNames(a, b, field) {
 function compareNumbers(a, b, field) {return a[field] - b[field];}
 function compareNumbersAsc(a, b, field) {return b[field] - a[field];}
 
-// function compareType(a,b) {return compareNames(a, b, 'operatorLong')}
 
 function sortBy(column){
     if (column.childNodes[1].innerHTML === "🔽") {
@@ -310,7 +309,12 @@ function isValidSearch(){
 
     var txtBox = document.getElementById("flightNum");
 
-    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").value.trim()==="בחר מהרשימה..."&& document.getElementById("airport_search").value.trim()==="בחר מהרשימה..."&& document.getElementById("terminal_search").value.trim()==="בחר מהרשימה..."){
+    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && 
+    ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
+    document.getElementById("airport_search").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
+    document.getElementById("terminal_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
+    document.getElementById("from_date").value===""&&
+    document.getElementById("to_date").value===""){
         searchBtn.disabled=true;
     }
     else{
@@ -318,14 +322,92 @@ function isValidSearch(){
     }
 }
 
+function search(){
+    var flightNum = document.getElementById("flightNum").value.trim();
+    
+
+    var terminal = document.getElementById("terminal_search");
+    var terminalIndex = terminal.selectedIndex;
+    var terminalVal = terminal[terminalIndex].value; 
+    
+
+    var airport = document.getElementById("airport_search");
+    var airportIndex = airport.selectedIndex;
+    var airportlVal = airport[airportIndex].value; 
+    
+
+    var airlineCompany = document.getElementById("airline_company");
+    var airlineCompanyIndex = airlineCompany.selectedIndex;
+    var airlineCompanylVal = airlineCompany[airlineCompanyIndex].value; 
+    
+
+    var schedueDate = document.getElementById("from_date").value;
+    
+
+    var actualDate = document.getElementById("to_date").value;
+    
+    
+    var departing;
+    if(document.getElementById("departures").style.backgroundColor==="yellow"){
+        departing=true;
+    }
+    else{departing=false;}
+    var ingoing;
+    if(document.getElementById("ingoing").style.backgroundColor==="yellow"){
+        ingoing=true;
+    }
+    else{ingoing=false;}
+    
+
+    let terms = [airlineCompanylVal, flightNum, schedueDate, actualDate, airportlVal, terminalVal];
+    let fields = ['operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal'];
+    let res = new Object();
+    for (let i = 0; i < terms.length; i++) {
+        if (terms[i] !=false) {
+            res[fields[i]] = terms[i];
+            i++;
+        
+        }
+    }
+
+    
+    return res;
+    
+}
+
 function clicked_btn(inp) {
+
+    var buttons = new Array();
+    buttons[0] = document.getElementById("departures");
+    buttons[1] = document.getElementById("ingoing");
+
     if(inp.style.backgroundColor == "white")
     {
         inp.style.backgroundColor = "yellow";
+        if(inp==buttons[0]){
+        buttons[1].disabled=true;
+        showDepartures();
+    }
+        else{
+            buttons[0].disabled=true;
+            showArriving();
+        }
+
     }
     
     else{
         inp.style.backgroundColor = "white";
+        if(inp==buttons[0]){
+            buttons[1].disabled=false;
+        }
+        else{
+            buttons[0].disabled=false;
+        }
+    }
+
+    isValidSearch();
+    if((buttons[0].style.backgroundColor=="white"&& buttons[1].style.backgroundColor=="white")) {
+        showAll();
     }
 }
 
@@ -359,22 +441,55 @@ function setUniqueLists(){
     setUniqueList('terminal', "terminal_search");
 }
 
-function getSearchResults(field, term){
+function getSearchResults(){
 let results = new Array();
-    for (const flight of jsonFlights) {
-        if (flight[field] == term) {
-            results.push(flight);
+let terms = search();
+let temp_fields = ['operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal'];
+
+    for (const flight of currentView) {
+        let isMatch = true;
+        for (let i = 0; i < terms.length; i++) {
+            const element = array[i];
+            
         }
+        if (flight[field] != term) {
+            isMatch = false;
+        }
+
+        // if (isMatch) {
+        //     results.push(flight);
+        // }
+            
     }
 
     return results;
 }
 
-function showSearchResults(){
-    currentView = search(field, term);
+function searchTerm(field, term){
+    let results = new Array();
+        for (const flight of jsonFlights) {
+            if (flight[field] == term) {
+                results.push(flight);
+            }
+        }
+        return results;
+    }
+
+function showDepartures(){
+    currentView = searchTerm('type', 'D');
     switchPage(1);
 }
 
+function showArriving(){
+    currentView = searchTerm('type', 'A');
+    switchPage(1);
+}
+
+function showAll(){
+    currentView = jsonFlights;
+    currentView = getSearchResults();
+    switchPage(1);
+}
 /////////////////////wave animation//////////////////////////////////
 
 function startWave(){
@@ -407,59 +522,3 @@ function toggleWave(){
 /////////////////////init function call//////////////////////////////
 init();
 
-/////////////////////////////////////////////////////////////////////
-function isValidSearch(){
-
-    var txtBox = document.getElementById("flightNum");
-
-    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && 
-    ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
-    document.getElementById("airport_search").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
-    document.getElementById("terminal_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
-    document.getElementById("from_date").value===""&&
-    document.getElementById("to_date").value===""){
-        searchBtn.disabled=true;
-    }
-    else{
-        searchBtn.disabled=false;
-    }
-}
-
-function search(){
-    var flightNum = document.getElementById("flightNum").value.trim();
-    console.log(flightNum);
-
-    var terminal = document.getElementById("terminal_search");
-    var terminalIndex = terminal.selectedIndex;
-    var terminalVal = terminal[terminalIndex].value; 
-    console.log(terminalVal);
-
-    var airport = document.getElementById("airport_search");
-    var airportIndex = airport.selectedIndex;
-    var airportlVal = airport[airportIndex].value; 
-    console.log(airportlVal);
-
-    var airlineCompany = document.getElementById("airline_company");
-    var airlineCompanyIndex = airlineCompany.selectedIndex;
-    var airlineCompanylVal = airlineCompany[airlineCompanyIndex].value; 
-    console.log(airlineCompanylVal);
-
-    var leavingDate = document.getElementById("from_date").value;
-    console.log(leavingDate)
-
-    var returnDate = document.getElementById("to_date").value;
-    console.log(returnDate)
-    
-    var departing;
-    if(document.getElementById("departures").style.backgroundColor==="yellow"){
-        departing=true;
-    }
-    else{departing=false;}
-    var ingoing;
-    if(document.getElementById("ingoing").style.backgroundColor==="yellow"){
-        ingoing=true;
-    }
-    else{ingoing=false;}
-    console.log(departing);
-    console.log(ingoing);
-}
