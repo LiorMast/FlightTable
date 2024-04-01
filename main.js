@@ -505,19 +505,20 @@ function getUnique(type){
 
 //insert the unique lists of the options availabe to the search boxes
 function setUniqueList(type, listid){
-     let unique = getUnique(type);
-     let lst = document.getElementById(listid);
-     lst.classList.add('dir-right')
-     let optn = document.createElement('option');
-     optn.value = ""
-     optn.innerText = "בחר מהרשימה...";
-     lst.appendChild(optn);
-     for (const i of unique) {
-        optn = document.createElement('option');
-        optn.value = i;
-        optn.innerText = i;
-        lst.appendChild(optn);
-     }
+    let unique = getUnique(type);
+    let sortedUniqueSet = new Set([...unique].sort())
+    let lst = document.getElementById(listid);
+    lst.classList.add('dir-right')
+    let optn = document.createElement('option');
+    optn.value = ""
+    optn.innerText = "בחר מהרשימה...";
+    lst.appendChild(optn);
+    for (const i of sortedUniqueSet) {
+       optn = document.createElement('option');
+       optn.value = i;
+       optn.innerText = i;
+       lst.appendChild(optn);
+     }
 }
 
 //setting uniques

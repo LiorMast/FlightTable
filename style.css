@@ -334,9 +334,13 @@ h6{
     display: flex;
     align-items: center;
     justify-content: center;
-    direction: rtl;
-    color: white;
-    text-shadow: 2px black;
+}
+
+.GraphDiv h1{
+      direction: rtl;
+      color: white !important;
+      text-shadow: 2px black;
+
   }
 
 
