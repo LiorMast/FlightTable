@@ -15,6 +15,10 @@ body{
     justify-content: center;
 }
 
+table{
+    border-collapse: collapse;
+}
+
 .flighttable table{
      width: 95%;  
 }
@@ -100,6 +104,7 @@ border-radius: 15px;
 text-align: center;
 display: grid;
 font-weight: bold;
+font-size: x-large;
 grid-template-columns: repeat(3, 1fr);
 grid-template-rows: repeat(2, 1fr);
 }
@@ -113,10 +118,22 @@ grid-template-rows: repeat(2, 1fr);
     text-align: center;
     padding: 50%;
 }
+
+.pageSelector{
+    background-color: white;
+    direction: ltr;
+    opacity: 50%;
+    /* max-width: 95%; */
+    margin: auto;
+    padding-bottom: 1px;
+}
+
 #pageList label{
     background: none;
     font-weight: bold;
-    padding: 5px;
+    padding: 4px;
+    margin-bottom: 4px;
+    margin-top: 4px;
 }
 
 #pageList label:hover{
@@ -138,8 +155,9 @@ grid-template-rows: repeat(2, 1fr);
 
 
 button>img{
-    height: 25px;
+    height: 32px;
 }
+
 
 #searchBtn{
     border-radius: 50px;
@@ -153,7 +171,7 @@ h2{
     margin-bottom: 10px;
 }
 
-#searchBtn:hover{
+.searchBtn_hover{
     cursor:pointer;
     background-color: white;
 }
@@ -163,29 +181,76 @@ p{
     font-weight: bold;
     color: black;
 }
-
-#searchDiv{
+#searchDiv input{
+    font-size: 18px;
+}
+#searchDiv select{
+    font-size: 18px;
+}
+#searchDiv{ 
+    margin: auto;
+    font-size: large;
+    border-radius: 25px;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr ;
+    row-gap: 50px;
     background-color: rgb(185, 236, 236);
     opacity: 90%;
     direction: ltr;
+    margin-bottom: 20px;
 }
-
+#search_button{
+    grid-column-start: 2;
+    grid-column-end:3 ;
+}
+#flightTypeContainer{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    grid-column-start: 3;
+    grid-column-end:4 ;
+}
+#buttonContainer{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr ;
+}
 input{
     direction: rtl;
 }
 
 #search_button>button{
-    height: 50px;
-    width: 50px;
+    height: 70px;
+    width: 70px;
     margin-top: 8px;
 }
 
 #departures{
+    cursor: pointer;
     background-color: white ;
+    font-size: large;
+    height: 80px;
+    width: 80px;
+}
+#departures>img{
+    height: 40px;
+}
+#ingoing>img{
+    height: 40px;
+}
+h6{
+    margin:0;
 }
 
 #ingoing{
+    cursor: pointer;
     background-color: white ;
+    font-size: large;
+    height: 80px;
+    width: 80px;
 }
 
 .container h1{
@@ -195,15 +260,6 @@ input{
 
 .dir-right{
     direction: rtl;
-}
-
-.pageSelector{
-    background-color: white;
-    direction: ltr;
-    opacity: 50%;
-    max-width: 95%;
-    margin: auto;
-
 }
 
 @keyframes side2side {
@@ -229,8 +285,29 @@ input{
     font-size:xx-large;
     min-height: 50px;
     min-width: 50px;
+    margin-bottom: 10px;
   }
 
   #wavebtn:hover{
     filter: brightness(1.15);
+  }
+  
+#prevnext button{
+    cursor: pointer;
+    font-weight: bold;
+    font-size: medium;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+#prevnext button:hover{
+    filter: brightness(1.2);
+}
+
+  #next{
+    margin-left: 5px;
+  }
+  
+  #prev{
+    margin-right: 5px;
   }
