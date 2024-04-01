@@ -553,8 +553,20 @@ function isDateBetween(dateStr, startDateStr, endDateStr) {
 function getSearchResults(){
 let results = new Array();
 let terms = getSearchValues();
+let searchScope = jsonFlights;
 
-    for (const flight of jsonFlights) {
+
+//checking if current view should be narrowed
+if (departureBtn.style.backgroundColor == 'yellow') {
+    currentView = jsonFlights;
+    searchScope = searchTerm('type', 'D');
+} else if (ingoing.style.backgroundColor == 'yellow') {
+    currentView = jsonFlights;
+    searchScope = searchTerm('type', 'A');
+}
+
+
+    for (const flight of searchScope) {
         let isMatch = true;
         for (const key in terms) {
             if (key =='startDate' || key =='endDate' ) {

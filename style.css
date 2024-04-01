@@ -183,12 +183,15 @@ p{
     font-weight: bold;
     color: black;
 }
+
 #searchDiv input{
     font-size: 18px;
 }
+
 #searchDiv select{
     font-size: 18px;
 }
+
 #searchDiv{ 
     margin: auto;
     font-size: large;
@@ -215,11 +218,6 @@ p{
     grid-column-start: 3;
     grid-column-end:4 ;
 }
-
-/* #flightTypeContainer button:hover:not([disabled]){
-    filter:invert();
-    cursor: pointer;
-} */
 
 #clearSearch button{
     font-size: large;
@@ -309,6 +307,7 @@ h6{
 
   #wavebtn:hover{
     filter: brightness(1.15);
+    cursor: pointer;
   }
   
 #prevnext button{
