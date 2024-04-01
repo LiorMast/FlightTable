@@ -1,17 +1,16 @@
 /////////////////globals////////////////////////////////////////////////////////////////////
 
-const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status']
-let currentView = jsonFlights;
-let currentpage = 1;
-let waveActive = false;
-let popupActive = false;
-
+const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status'] //the columns of the table to be taken from the json
+let currentView = jsonFlights; //holds the current array of jsons to be displayed
+let currentpage = 1; //holds the current page
+let waveActive = false; //saves the state of the wave animation
+let popupActive = false; //saves the state of the popup window
 
 const searchBtn = document.getElementById("searchBtn");
 const departureBtn = document.getElementById("departures");
 const ingoing = document.getElementById("ingoing");
 
-function init(){
+function init(){ //function that starts as the page loads, sets the starting state of the page
     setUniqueLists();
     departureBtn.style.backgroundColor="white";
     ingoing.style.backgroundColor="white";
@@ -19,7 +18,7 @@ function init(){
 }
 /////////////////////createtable//////////////////////////////////
 
-function buildTable(json){
+function buildTable(json){ //builds the table according to the array of flights it is given
     let maintable = document.createElement('table');
     maintable.id = 'maintable';
     if (document.getElementById('maintable')) {
@@ -49,7 +48,7 @@ function buildTable(json){
     
 }
 
-function addToRow(flight,key, row){
+function addToRow(flight,key, row){ //adds info to row of table according to the flight it is given
     let cell = document.createElement('td');
     if (key == 'type') {
             row.classList.add(flight[key]);
@@ -65,7 +64,7 @@ function addToRow(flight,key, row){
     row.appendChild(cell);
 }
 
-function formatTime(timestring){
+function formatTime(timestring){ //gets ISO formatted time and returns normal human readable formatted time
  let time = timestring.split(/\D+/);
  let res = time[3]+":"+time[4]+" "+time[2]+"/"+time[1]+"/"+time[0];
  return res;
@@ -73,7 +72,7 @@ function formatTime(timestring){
 
 ///////////////////////////image///////////////////////////////////
 
-function addImage(source){
+function addImage(source){ //loads an svg image to the row according to the type of flight in the row
     let svgD = `
     <svg fill="#000000" height = 30  version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
 	 viewBox="0 0 485.794 485.794" xml:space="preserve">
@@ -130,6 +129,8 @@ function addImage(source){
     }
 }
 
+
+//these two functions are responsible for changing the images of the planes on the row to white when the row is hovered on
 function setSVGWhite(element){
     return element.querySelector("svg").style.fill = 'white'
 }
@@ -140,7 +141,8 @@ function setSVGBlack(element){
 
 //////////////////////////sort//////////////////////////////
 
-function compareNames(a, b, field) {
+
+function compareNames(a, b, field) { //function to compare two rows according the their fields
     const nameA = a[field].toLowerCase();
     const nameB = b[field].toLowerCase();
     if (nameA < nameB) return -1;
@@ -148,18 +150,19 @@ function compareNames(a, b, field) {
     return 0;
   }
   
-  function compareNamesAsc(a, b, field) {
+  function compareNamesAsc(a, b, field) { //same as above but reversed for reverse sorting
       const nameA = a[field].toLowerCase();
       const nameB = b[field].toLowerCase();
       if (nameA < nameB) return 1;
       if (nameA > nameB) return -1;
       return 0;
     }
-function compareNumbers(a, b, field) {return a[field] - b[field];}
-function compareNumbersAsc(a, b, field) {return b[field] - a[field];}
+
+function compareNumbers(a, b, field) {return a[field] - b[field];} //function to compare two rows according to a numerical field such as flight num or terminal
+function compareNumbersAsc(a, b, field) {return b[field] - a[field];} //same but reversed
 
 
-function sortBy(column){
+function sortBy(column){ //function that sorts the table by the given column
     if (column.childNodes[1].innerHTML === "🔽") {
         if (column.id == 'number' || column.id == 'terminal') {
             currentView = [...currentView].sort((a,b) => compareNumbersAsc(a,b,column.id));
@@ -184,7 +187,7 @@ function sortBy(column){
         document.getElementById(column.id).childNodes[1].innerHTML = "🔽";
     }
 
-    function refreshHeaders(){
+    function refreshHeaders(){ //function that makes sure that if we switch sorting column, the change is reflected in the rows
         for (const i of document.getElementById('tableHeaders').childNodes) {
             if ((i.childNodes[1].innerHTML === "🔽" || i.childNodes[1].innerHTML === "🔼") && i.id != column.id) {
                 i.childNodes[1].innerHTML = "";
@@ -196,31 +199,31 @@ function sortBy(column){
 
 //////////////page selector///////////////////////////
 
-function switchPage(page){
+function switchPage(page){ //changes the page of the table currently being displayed
     currentpage = page;
     document.querySelector('.pageSelector').removeAttribute('style');
     refresh();
     document.getElementById('rdobtn'+page).checked = true;
 }
 
-function prevPage(){
+function prevPage(){ //switches to the previous page
     if (currentpage != 1) {
         switchPage(currentpage-1);
     }
 }
 
-function nextPage(){
+function nextPage(){ //switches to the next page
     if (currentpage != getPageCount()) {
         switchPage(currentpage+1);
     }
 }
-function getEntries(start, end ,json){return [...json].slice(start,end);}
+function getEntries(start, end ,json){return [...json].slice(start,end);} //gets the flights to be displayed on the current page
 
-function getPageCount(){
+function getPageCount(){ //gets the number of pages currently in the table
     return Math.ceil(currentView.length/document.getElementById('viewsSelector').value);
 }
 
-function getPageInfo(){
+function getPageInfo(){ //gets the string that displays information about the table and current page being viewed
     if (currentView.length == 0) {
         return 'אין תוצאות להציג'
     } else {
@@ -228,7 +231,7 @@ function getPageInfo(){
     }
 }
 
-function getPageLinks(){
+function getPageLinks(){ //gets the buttons for page navigation
     if(document.getElementById('pageList')) document.getElementById('pageList').remove();
     if(document.getElementById('infotxt')) document.getElementById('infotxt').remove();
     if(document.getElementById('prevnext')) document.getElementById('prevnext').remove();
@@ -278,7 +281,7 @@ function getPageLinks(){
 
 //////////////////////popup///////////////////////////////
 
-function createPopup(element){
+function createPopup(element){ //creates the popup window that is displayed when clicking on a row
     if(document.getElementById('popup')) document.getElementById('popup').remove();
     let popup = document.createElement('div');
     let popupDetails = document.createElement('div');
@@ -321,7 +324,7 @@ function createPopup(element){
     }
 }
 
-function closePopup(){
+function closePopup(){ //gets rid of the popup window that is displayed when clicking on a row
     popup.setAttribute('style','animation: rollup 0.5s ease-in-out forwards');
 
     setTimeout(function(){document.getElementById('popup').remove()},1000)
@@ -330,7 +333,7 @@ function closePopup(){
 
 //////////////////////refresh/////////////////////////////
 
-function refresh() {
+function refresh() { //updates the display of the table according to the current view
     buildTable(getEntries(document.getElementById('viewsSelector').value*(currentpage-1),document.getElementById('viewsSelector').value*(currentpage)>currentView.length ? currentView.length:document.getElementById('viewsSelector').value*(currentpage), currentView));
     getPageLinks();
     if (waveActive) startWave();    
@@ -343,7 +346,7 @@ function refresh() {
 ////////////////////////////search/////////////////////////////
 
 
-
+// Checking if at least one search paramter has been inserted
 function isValidSearch(){
 
     var txtBox = document.getElementById("flightNum");
@@ -363,6 +366,7 @@ function isValidSearch(){
     }
 }
 
+// get the parameters the user has inserted
 function getSearchValues(){
     let flightNum = document.getElementById("flightNum").value.trim();
     try {
@@ -374,7 +378,7 @@ function getSearchValues(){
         flightNum = "";
     }
     
-
+    
     let terminal = document.getElementById("terminal_search");
     let terminalIndex = terminal.selectedIndex;
     let terminalVal = terminal[terminalIndex].value;
@@ -396,6 +400,7 @@ function getSearchValues(){
 
     let endDate = document.getElementById("to_date").value;  
 
+    //creating an array from the parameters and returning only the paramters that arent empty
     let terms = [airlineCompanylVal, flightNum, startDate, endDate, airportlVal, terminalVal];
     let fields = ['operatorLong', 'number', 'startDate', 'endDate', 'airport', 'terminal'];
     let res = new Object();
@@ -411,6 +416,8 @@ function getSearchValues(){
     
 }
 
+// changing the toggle of the flight type based on the user clicking and disabling the othe one
+//to ensure there are no errors
 function clicked_btn(inp) {
 
     var buttons = new Array();
@@ -444,13 +451,13 @@ function clicked_btn(inp) {
             buttons[0].style.cursor = "pointer";
         }
     }
-
+    // toggle the table results based on the flight type that has been pressed
     isValidSearch();
     if((buttons[0].style.backgroundColor=="white"&& buttons[1].style.backgroundColor=="white")) {
         showAll();
     }
 }
-
+//get unique set based on the key type
 function getUnique(type){
     let unique = new Set();
     for (const flight of jsonFlights) {
@@ -459,6 +466,7 @@ function getUnique(type){
     return unique;   
 }
 
+//insert the unique lists of the options availabe to the search boxes
 function setUniqueList(type, listid){
      let unique = getUnique(type);
      let lst = document.getElementById(listid);
@@ -475,21 +483,25 @@ function setUniqueList(type, listid){
      }
 }
 
+//setting uniques
 function setUniqueLists(){
     setUniqueList('operatorLong', "airline_company");
     setUniqueList('airport', "airport_search");
     setUniqueList('terminal', "terminal_search");
 }
 
+//converting strings to date
 function string2Date(dateStr){
     return new Date(dateStr);
 }
 
+//converting iso formatted strings to dates
 function iso2Date(dateStr){
     dateStr = dateStr.split('T')[0];
     return string2Date(dateStr);
 }
 
+//checking if the date of a flight is between the search parameter
 function isDateBetween(dateStr, startDateStr, endDateStr) {
     // Convert date strings to Date objects
     let date = iso2Date(dateStr);
@@ -500,6 +512,7 @@ function isDateBetween(dateStr, startDateStr, endDateStr) {
     return ((startDate <= date) && (date <= endDate));
 }
 
+//checking each flight if it should appear on the search
 function getSearchResults(){
 let results = new Array();
 let terms = getSearchValues();
@@ -508,11 +521,13 @@ let terms = getSearchValues();
         let isMatch = true;
         for (const key in terms) {
             if (key =='startDate' || key =='endDate' ) {
+                // no start date so it starts from 1970(any date)
                 if(terms['startDate']==undefined){
                     if(!(isDateBetween(flight['schedueTime'], "1970-01-01", terms['endDate']))){
                         isMatch = false;
                     }
                 }
+                // no end date so it ends at 2099(any date)
                 else if(terms['endDate']==undefined){
                     if(!(isDateBetween(flight['schedueTime'], terms['startDate'], "2099-01-01"))){
                         isMatch = false;
@@ -538,7 +553,7 @@ let terms = getSearchValues();
     return results;
 }
 
-function searchTerm(field, term){
+function searchTerm(field, term){ //gets array of flights that match a certain term in a given field in the current view
     let results = new Array();
         for (const flight of currentView) {
             if (flight[field] == term) {
@@ -548,22 +563,22 @@ function searchTerm(field, term){
         return results;
     }
 
-function showDepartures(){
+function showDepartures(){ //updates the table to show only departing flights from the current view
     currentView = searchTerm('type', 'D');
     switchPage(1);
 }
 
-function showArriving(){
+function showArriving(){  //updates the table to show only arriving flights from the current view
     currentView = searchTerm('type', 'A');
     switchPage(1);
 }
 
-function showAll(){
+function showAll(){  //updates the table to show all flights.
     currentView = jsonFlights;
     showSearchResults();
 }
 
-function showSearchResults(){
+function showSearchResults(){ //updates the table to show search results according to user input
     let searchRes = getSearchResults();
     if (searchRes.length === 0) {
         alert('לא נמצאו תוצאות חיפוש!');
@@ -575,9 +590,8 @@ function showSearchResults(){
 
 /////////////////////wave animation//////////////////////////////////
 
-function startWave(){
+function startWave(){ //starts wave animation on currently displayed table
     let rows = Array.from(document.querySelectorAll('#maintable tr'))
-    // rows.push(document.querySelector('.pageSelector'))
     let delay = 0;
     for (const row of rows) {
         row.setAttribute('style','animation: side2side 1.3s infinite '+delay+'s ease-in-out;');
@@ -585,7 +599,7 @@ function startWave(){
     }
 }
 
-function stopWave(){
+function stopWave(){ //stops wave animation on currently displayed table
     let rows = Array.from(document.querySelectorAll('#maintable tr'))
     rows.push(document.querySelector('.pageSelector'))
     for (const row of rows) {
@@ -593,7 +607,7 @@ function stopWave(){
     }
 }
 
-function toggleWave(){
+function toggleWave(){ //function to be activated when pressing the wave button, starts the wave animation if it's not active and stops it if it is.
     if (waveActive) {
         stopWave();
     } else {
