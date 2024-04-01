@@ -37,15 +37,18 @@
                     <p>טרמינל</p>
                     <select name="" id="terminal_search" onchange="isValidSearch()"></select>  
                 </div>
+                <div id="clearSearch">
+                <button type="button" id="clearSearchBtn" onclick="clearSearch();">נקה חיפוש</button>
+            </div>
             
                 <div class="buttonContainer" id="search_button">
                 <button type="button" id="searchBtn" onclick="showSearchResults();" disabled="disabled" ><img src="./images/magnifying-glass-search-svgrepo-com.svg" alt=""></button>
-                </div>
-                <div id="flightTypeContainer">
-                    <button id="departures" onclick="clicked_btn(this);"><img src="./images/D.svg" alt=""><h6>יוצאות</h6></button>
-
-                    <button id="ingoing" onclick="clicked_btn(this);"><img src="./images/A.svg" alt=""><h6>נכנסות</h6></button>
-                </div>
+            </div>
+            <div id="flightTypeContainer">
+                <button id="departures" onclick="clicked_btn(this);"><img src="./images/D.svg" alt=""><h6>יוצאות</h6></button>
+                
+                <button id="ingoing" onclick="clicked_btn(this);"><img src="./images/A.svg" alt=""><h6>נכנסות</h6></button>
+            </div>
             </div>
             
         </div>

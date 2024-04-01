@@ -194,7 +194,22 @@ function sortBy(column){ //function that sorts the table by the given column
             }
         }
     }
+
     
+}
+
+function clearHeaders(){ //returns headers to their orginal state
+
+    document.getElementById('tableHeaders').remove();
+    let tableHeaders = document.createElement('tr');
+    tableHeaders.id = 'tableHeaders';
+    tableHeaders.innerHTML = `<th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th>`;
+    try {
+        document.getElementById('maintable').insertBefore(tableHeaders, document.getElementById('tr1'))
+        
+    } catch (error) {
+        document.getElementById('maintable').innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th></tr>`;
+    }
 }
 
 //////////////page selector///////////////////////////
@@ -243,8 +258,8 @@ function getPageLinks(){ //gets the buttons for page navigation
     let next = document.createElement('button');
     prev.id = 'prev';
     next.id = 'next';
-    prev.innerText = '◀️ Previous Page';
-    next.innerText = 'Next Page ▶️';
+    prev.innerText = '◀️ לעמוד הקודם';
+    next.innerText = 'לעמוד הבא ▶️';
     prev.setAttribute('onclick','prevPage()');
     next.setAttribute('onclick','nextPage()');
     prevnext.appendChild(prev);
@@ -346,13 +361,35 @@ function refresh() { //updates the display of the table according to the current
 ////////////////////////////search/////////////////////////////
 
 
+
+function clearSearch(){ //clears search fields and returns view to normal
+    document.getElementById("flightNum").value=""  
+    document.getElementById("airline_company").selectedIndex = 0;
+    document.getElementById("airport_search").selectedIndex = 0;
+    document.getElementById("terminal_search").selectedIndex = 0;
+    document.getElementById("from_date").value=""
+    document.getElementById("to_date").value=""
+    departureBtn.style.backgroundColor="white";
+    ingoing.style.backgroundColor="white";
+    departureBtn.removeAttribute('disabled');
+    ingoing.removeAttribute('disabled');
+    departureBtn.style.cursor = "pointer";
+    ingoing.style.cursor = "pointer";
+    searchBtn.disabled=true;
+    searchBtn.classList.remove("searchBtn_hover");
+    clearHeaders();
+
+    currentView = jsonFlights
+    switchPage(1);
+}
+
 // Checking if at least one search paramter has been inserted
 function isValidSearch(){
 
     var txtBox = document.getElementById("flightNum");
 
-    if(departureBtn.style.backgroundColor ==="white" && txtBox.value.trim()==="" && 
-    ingoing.style.backgroundColor ==="white" && document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
+    if(txtBox.value.trim()==="" && 
+    document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
     document.getElementById("airport_search").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
     document.getElementById("terminal_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
     document.getElementById("from_date").value===""&&
