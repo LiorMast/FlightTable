@@ -1,6 +1,6 @@
 /////////////////globals////////////////////////////////////////////////////////////////////
 
-const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'terminal', 'status'] //the columns of the table to be taken from the json
+const fields = ['type','operatorLong', 'number', 'schedueTime', 'actualTime', 'airport', 'country', 'terminal', 'status'] //the columns of the table to be taken from the json
 let currentView = jsonFlights; //holds the current array of jsons to be displayed
 let currentpage = 1; //holds the current page
 let waveActive = false; //saves the state of the wave animation
@@ -24,7 +24,7 @@ function buildTable(json){ //builds the table according to the array of flights 
         document.getElementById('maintable').remove();
         maintable.appendChild(headers);
     }else{
-        maintable.innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th></tr>`;
+        maintable.innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">מדינה<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[8]+`">סטטוס<button></button></th></tr>`;
     }
     let i = 1;
     for (const flight of json) {
@@ -201,12 +201,12 @@ function clearHeaders(){ //returns headers to their orginal state
     document.getElementById('tableHeaders').remove();
     let tableHeaders = document.createElement('tr');
     tableHeaders.id = 'tableHeaders';
-    tableHeaders.innerHTML = `<th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th>`;
+    tableHeaders.innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">מדינה<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[8]+`">סטטוס<button></button></th></tr>`;
     try {
         document.getElementById('maintable').insertBefore(tableHeaders, document.getElementById('tr1'))
         
     } catch (error) {
-        document.getElementById('maintable').innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">סטטוס<button></button></th></tr>`;
+        document.getElementById('maintable').innerHTML = `<tr id='tableHeaders'><th onclick="sortBy(this)" id="`+fields[0]+`">סוג<button></button></th><th onclick="sortBy(this)" id="`+fields[1]+`">חברת תעופה<button></button></th><th onclick="sortBy(this)" id="`+fields[2]+`">מספר טיסה<button></button></th><th onclick="sortBy(this)" id="`+fields[3]+`">זמן מתוכנן<button></button></th><th onclick="sortBy(this)" id="`+fields[4]+`">זמן עדכני<button></button></th><th onclick="sortBy(this)" id="`+fields[5]+`">יעד<button></button></th><th onclick="sortBy(this)" id="`+fields[6]+`">מדינה<button></button></th><th onclick="sortBy(this)" id="`+fields[7]+`">טרמינל<button></button></th><th onclick="sortBy(this)" id="`+fields[8]+`">סטטוס<button></button></th></tr>`;
     }
 }
 
@@ -307,13 +307,17 @@ function createPopup(element){ //creates the popup window that is displayed when
     let titles = popupDetails.childNodes
     let i = 0;
     for (const key in info) {
-        if (key == 'schedueTime' || key == 'actualTime'){
+        if (info[key] == "") {
+            titles[i].innerText += "לא ידוע";
+        }
+        else if (key == 'schedueTime' || key == 'actualTime'){
             titles[i].innerText += formatTime(info[key]);
         }else{
             titles[i].innerText += info[key];
         }
         i++;
     }
+
     popup.appendChild(title);
     popup.appendChild(popupDetails);
     popup.innerHTML += `
@@ -326,6 +330,7 @@ function createPopup(element){ //creates the popup window that is displayed when
     document.body.appendChild(popup);
     showPopup();
     function showPopup(){
+        
         if (!popupActive) {
             popup.setAttribute('style','animation: rolldown 0.5s ease-in-out forwards');
         }
@@ -338,10 +343,16 @@ function createPopup(element){ //creates the popup window that is displayed when
 }
 
 function closePopup(){ //gets rid of the popup window that is displayed when clicking on a row
-    popup.setAttribute('style','animation: rollup 0.5s ease-in-out forwards');
-
-    setTimeout(function(){document.getElementById('popup').remove()},1000)
     popupActive = false;
+    popup.setAttribute('style','animation: rollup 0.5s ease-in-out forwards');
+    
+
+    setTimeout(function(){
+        if (!popupActive) {
+            document.getElementById('popup').remove();
+        }
+    },600)
+    
 }
 
 //////////////////////refresh/////////////////////////////
