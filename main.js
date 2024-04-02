@@ -12,8 +12,6 @@ const ingoing = document.getElementById("ingoing");
 
 function init(){ //function that starts as the page loads, sets the starting state of the page
     setUniqueLists();
-    departureBtn.style.backgroundColor="white";
-    ingoing.style.backgroundColor="white";
     switchPage(1);
 }
 /////////////////////createtable//////////////////////////////////
@@ -132,11 +130,11 @@ function addImage(source){ //loads an svg image to the row according to the type
 
 //these two functions are responsible for changing the images of the planes on the row to white when the row is hovered on
 function setSVGWhite(element){
-    return element.querySelector("svg").style.fill = 'white'
+    return element.querySelector("svg").classList.add('SVGwhite');
 }
 
 function setSVGBlack(element){
-    return element.querySelector("svg").style.fill = 'black'
+    return element.querySelector("svg").classList.remove('SVGwhite');
 }
 
 //////////////////////////sort//////////////////////////////
@@ -187,7 +185,7 @@ function sortBy(column){ //function that sorts the table by the given column
         document.getElementById(column.id).childNodes[1].innerHTML = "🔽";
     }
 
-    function refreshHeaders(){ //function that makes sure that if we switch sorting column, the change is reflected in the rows
+    function refreshHeaders(){ //function that makes sure that if we switch sorting column, the change is reflected in the rows (clears arrows from other columns)
         for (const i of document.getElementById('tableHeaders').childNodes) {
             if ((i.childNodes[1].innerHTML === "🔽" || i.childNodes[1].innerHTML === "🔼") && i.id != column.id) {
                 i.childNodes[1].innerHTML = "";
@@ -363,18 +361,16 @@ function refresh() { //updates the display of the table according to the current
 
 
 function clearSearch(){ //clears search fields and returns view to normal
-    document.getElementById("flightNum").value=""  
+    document.getElementById("flightNum").value="";
     document.getElementById("airline_company").selectedIndex = 0;
     document.getElementById("airport_search").selectedIndex = 0;
     document.getElementById("terminal_search").selectedIndex = 0;
-    document.getElementById("from_date").value=""
-    document.getElementById("to_date").value=""
-    departureBtn.style.backgroundColor="white";
-    ingoing.style.backgroundColor="white";
+    document.getElementById("from_date").value="";
+    document.getElementById("to_date").value="";
+    departureBtn.classList.remove('yellowBG');
+    ingoing.classList.remove('yellowBG');
     departureBtn.removeAttribute('disabled');
     ingoing.removeAttribute('disabled');
-    departureBtn.style.cursor = "pointer";
-    ingoing.style.cursor = "pointer";
     searchBtn.disabled=true;
     searchBtn.classList.remove("searchBtn_hover");
     clearHeaders();
@@ -461,36 +457,32 @@ function clicked_btn(inp) {
     buttons[0] = document.getElementById("departures");
     buttons[1] = document.getElementById("ingoing");
 
-    if(inp.style.backgroundColor == "white")
+    if(!inp.classList.contains('yellowBG'))
     {
-        inp.style.backgroundColor = "yellow";
+        inp.classList.add('yellowBG');
         if(inp==buttons[0]){
         buttons[1].disabled=true;
-        buttons[1].style.cursor = "not-allowed";
         showDepartures();
     }
         else{
             buttons[0].disabled=true;
-            buttons[0].style.cursor = "not-allowed";
             showArriving();
         }
 
     }
     
     else{
-        inp.style.backgroundColor = "white";
+        inp.classList.remove('yellowBG');
         if(inp==buttons[0]){
             buttons[1].disabled=false;
-            buttons[1].style.cursor = "pointer";
         }
         else{
             buttons[0].disabled=false;
-            buttons[0].style.cursor = "pointer";
         }
     }
     // toggle the table results based on the flight type that has been pressed
     isValidSearch();
-    if((buttons[0].style.backgroundColor=="white"&& buttons[1].style.backgroundColor=="white")) {
+    if(((!buttons[0].classList.contains('yellowBG')) && (!buttons[1].classList.contains('yellowBG')))) {
         showAll();
     }
 }
@@ -558,10 +550,10 @@ let searchScope = jsonFlights;
 
 
 //checking if current view should be narrowed
-if (departureBtn.style.backgroundColor == 'yellow') {
+if ((departureBtn.classList.contains('yellowBG'))) {
     currentView = jsonFlights;
     searchScope = searchTerm('type', 'D');
-} else if (ingoing.style.backgroundColor == 'yellow') {
+} else if (ingoing.classList.contains('yellowBG')) {
     currentView = jsonFlights;
     searchScope = searchTerm('type', 'A');
 }

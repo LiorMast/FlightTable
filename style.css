@@ -42,11 +42,9 @@ table{
 }
 
 /* Hover effect for SVG elements */
-#maintable svg:hover{
-    fill: white;
-    stroke: white;
-    stroke-width: 5px;
 
+.SVGwhite{
+    fill: white !important;
 }
 
 .timedelay{
@@ -64,7 +62,7 @@ table{
 
 /* Hover effect for table headers */
 #maintable th:hover{
-    box-shadow: inset 0 0 7px goldenrod;
+    box-shadow: inset 0 0 7px rgb(41, 134, 255);
 }
 
 /* Button styles within table headers */
@@ -267,6 +265,15 @@ input{
 }
 
 /* Styles of the toggle buttons*/
+
+.yellowBG{
+    background-color: yellow !important;
+}
+
+#flightTypeContainer button:disabled:hover{
+    cursor: not-allowed;
+}
+
 #departures{
     cursor: pointer;
     background-color: white ;
@@ -274,6 +281,9 @@ input{
     height: 80px;
     width: 80px;
 }
+
+
+
 #departures>img{
     height: 40px;
 }
