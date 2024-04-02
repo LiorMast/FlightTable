@@ -1,3 +1,4 @@
+/* Body styles */
 body{
     direction: rtl;
     font-family:'Courier New', Courier, monospace;
@@ -9,7 +10,7 @@ body{
 #maintable{
     opacity: 90%;
 }
-
+/* Table for flights */
 .flighttable{
     display: flex;
     justify-content: center;
@@ -23,7 +24,7 @@ table{
      width: 95%;  
 }
 
-
+/* Row styles for arrival and departure */
 #maintable tr.A{
     background-color: lightblue;
 }
@@ -31,6 +32,7 @@ table{
     background-color:azure;
 }
 
+/* Hover effect for table rows */
 #maintable tr:hover{
     background-color: rgb(21, 119, 231) !important;
     color: white;
@@ -39,6 +41,7 @@ table{
     
 }
 
+/* Hover effect for SVG elements */
 #maintable svg:hover{
     fill: white;
     stroke: white;
@@ -51,6 +54,7 @@ table{
     font-weight: bold;
 }
 
+/* Table header styles */
 #maintable th{
     box-shadow: inset 0 0 7px black;
     background-color: white;
@@ -58,10 +62,12 @@ table{
     padding-left: 15px;
 }
 
+/* Hover effect for table headers */
 #maintable th:hover{
     box-shadow: inset 0 0 7px goldenrod;
 }
 
+/* Button styles within table headers */
 #maintable th button{
     border: 0px;
     background:none;
@@ -77,19 +83,20 @@ table{
 
 
 
-
+/* View selector styles */
 .viewSelector{
     text-align: left;
     padding-left: 50px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-
+/* List item styles */
 li{
     list-style-type: none;
     display: inline-block;
 }
 
+/* Popup styles */
 #popup{
 z-index: 99;
 padding-bottom: 10px;
@@ -103,6 +110,7 @@ background-color: lightskyblue;
 border-radius: 15px;
 }
 
+/* Popup details styles */
 #popupDetails{
 text-align: center;
 display: grid;
@@ -112,6 +120,7 @@ grid-template-columns: repeat(3, 1fr);
 grid-template-rows: repeat(2, 1fr);
 }
 
+/* Hover effect for path elements within popup */
 #popup path:hover{
     cursor: pointer;
     fill: white;
@@ -126,7 +135,6 @@ grid-template-rows: repeat(2, 1fr);
     background-color: white;
     direction: ltr;
     opacity: 50%;
-    /* max-width: 95%; */
     margin: auto;
     padding-bottom: 1px;
 }
@@ -139,16 +147,19 @@ grid-template-rows: repeat(2, 1fr);
     margin-top: 4px;
 }
 
+/* Hover effect for labels within page list */
 #pageList label:hover{
     background-color: black;
     color: white;
     cursor: pointer;
 }
 
+/* Radio button styles within page list */
 #pageList input[type="radio"]{
     display: none;
 }
 
+/* Checked radio button styles within page list */
 #pageList input[type="radio"]:checked + label {
     background-color: rgb(21, 119, 231);
     color: white;
@@ -173,6 +184,7 @@ h2{
     margin-bottom: 10px;
 }
 
+/* Hover effect for search button */
 .searchBtn_hover{
     cursor:pointer;
     background-color: white;
@@ -184,14 +196,17 @@ p{
     color: black;
 }
 
+/* Input styles within search div */
 #searchDiv input{
     font-size: 18px;
 }
 
+/* Select styles within search div */
 #searchDiv select{
     font-size: 18px;
 }
 
+/* Search div styles */
 #searchDiv{ 
     margin: auto;
     font-size: large;
@@ -208,10 +223,13 @@ p{
     direction: ltr;
     margin-bottom: 20px;
 }
+
+/* Layout of the flightcontainer and searchbutton via grid */
 #search_button{
     grid-column-start: 2;
     grid-column-end:3 ;
 }
+
 #flightTypeContainer{
     margin-top: 10px;
     margin-bottom: 20px;
@@ -219,12 +237,15 @@ p{
     grid-column-end:4 ;
 }
 
+
+
 #clearSearch button{
     font-size: large;
     border-radius: 15px;
     background: none;
 }
 
+/* Hover effect for clear search button, flight type container button, search button, and wave button */
 #clearSearch button:hover, #flightTypeContainer button:hover:not([disabled]), #searchBtn:hover:not([disabled]), #wavebtn:hover{
     cursor: pointer;
     box-shadow: inset 0 0 7px gray;
@@ -245,6 +266,7 @@ input{
     margin-top: 8px;
 }
 
+/* Styles of the toggle buttons*/
 #departures{
     cursor: pointer;
     background-color: white ;
@@ -279,6 +301,7 @@ h6{
     direction: rtl;
 }
 
+/* Keyframes for animations */
 @keyframes side2side {
     0% { transform: translateX(30px); }
     50% { transform: translateX(-30px); }
@@ -295,6 +318,7 @@ h6{
     to { transform: translateY(-100%); } 
   }
 
+/* Wave button styles */
   #wavebtn{
     border-radius: 50%;
     background-color: rgb(21, 119, 231);
@@ -307,7 +331,6 @@ h6{
 
   #wavebtn:hover{
     filter: brightness(1.15);
-    cursor: pointer;
   }
   
 #prevnext button{
@@ -329,18 +352,18 @@ h6{
   #prev{
     margin-right: 5px;
   }
-
+  
+/* Graphs styling*/
   .GraphDiv{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.GraphDiv h1{
-      direction: rtl;
-      color: white !important;
-      text-shadow: 2px black;
-
+#graphTitle, .viewsSelector span{
+    direction: rtl;
+    color: white;
+    text-shadow: 2px black;
   }
 
 
@@ -350,6 +373,6 @@ h6{
     }
     
     .svg-container{
-        margin: auto !important;
+        margin: auto !important; /* Center horizontally */
 
   }
