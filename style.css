@@ -237,14 +237,20 @@ p{
 
 
 
-#clearSearch button{
+#clearSearch button, .pdflink button{
     font-size: large;
     border-radius: 15px;
+    border-color: black;
+    border-width: 3px;
     background: none;
 }
 
+.pdflink button{
+    color: lightblue;
+}
+
 /* Hover effect for clear search button, flight type container button, search button, and wave button */
-#clearSearch button:hover, #flightTypeContainer button:hover:not([disabled]), #searchBtn:hover:not([disabled]), #wavebtn:hover{
+#clearSearch button:hover,.pdflink button:hover, #flightTypeContainer button:hover:not([disabled]), #searchBtn:hover:not([disabled]), #wavebtn:hover{
     cursor: pointer;
     box-shadow: inset 0 0 7px gray;
 }
@@ -373,7 +379,7 @@ h6{
 #graphTitle, .viewsSelector span{
     direction: rtl;
     color: white;
-    text-shadow: 2px black;
+    text-shadow: 2px 2px black;
   }
 
 

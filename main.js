@@ -351,7 +351,7 @@ function closePopup(){ //gets rid of the popup window that is displayed when cli
         if (!popupActive) {
             document.getElementById('popup').remove();
         }
-    },600)
+    },500)
     
 }
 
