@@ -47,7 +47,7 @@ table{
     fill: white !important;
 }
 
-.timedelay{
+.timedelay{ /* Class denoting time delayed row */
     color: red;
     font-weight: bold;
 }

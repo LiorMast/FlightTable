@@ -214,7 +214,7 @@ function clearHeaders(){ //returns headers to their orginal state
 
 function switchPage(page){ //changes the page of the table currently being displayed
     currentpage = page;
-    document.querySelector('.pageSelector').removeAttribute('style');
+    document.querySelector('.pageSelector').removeAttribute('style'); //not sure why it's here but better leave it in.
     refresh();
     document.getElementById('rdobtn'+page).checked = true;
 }
@@ -364,7 +364,7 @@ function clearSearch(){ //clears search fields and returns view to normal
     document.getElementById("flightNum").value="";
     document.getElementById("airline_company").selectedIndex = 0;
     document.getElementById("airport_search").selectedIndex = 0;
-    document.getElementById("terminal_search").selectedIndex = 0;
+    document.getElementById("country_search").selectedIndex = 0;
     document.getElementById("from_date").value="";
     document.getElementById("to_date").value="";
     departureBtn.classList.remove('yellowBG');
@@ -387,7 +387,7 @@ function isValidSearch(){
     if(txtBox.value.trim()==="" && 
     document.getElementById("airline_company").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
     document.getElementById("airport_search").selectedOptions[0].textContent==="בחר מהרשימה..."&& 
-    document.getElementById("terminal_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
+    document.getElementById("country_search").selectedOptions[0].textContent==="בחר מהרשימה..." &&
     document.getElementById("from_date").value===""&&
     document.getElementById("to_date").value===""){
         searchBtn.disabled=true;
@@ -412,9 +412,9 @@ function getSearchValues(){
     }
     
     
-    let terminal = document.getElementById("terminal_search");
-    let terminalIndex = terminal.selectedIndex;
-    let terminalVal = terminal[terminalIndex].value;
+    let country = document.getElementById("country_search");
+    let countryIndex = country.selectedIndex;
+    let countryVal = country[countryIndex].value;
     
     
 
@@ -434,8 +434,8 @@ function getSearchValues(){
     let endDate = document.getElementById("to_date").value;  
 
     //creating an array from the parameters and returning only the paramters that arent empty
-    let terms = [airlineCompanylVal, flightNum, startDate, endDate, airportlVal, terminalVal];
-    let fields = ['operatorLong', 'number', 'startDate', 'endDate', 'airport', 'terminal'];
+    let terms = [airlineCompanylVal, flightNum, startDate, endDate, airportlVal, countryVal];
+    let fields = ['operatorLong', 'number', 'startDate', 'endDate', 'airport', 'country'];
     let res = new Object();
     
     for (let i = 0; i < fields.length; i++) {              
@@ -517,7 +517,7 @@ function setUniqueList(type, listid){
 function setUniqueLists(){
     setUniqueList('operatorLong', "airline_company");
     setUniqueList('airport', "airport_search");
-    setUniqueList('terminal', "terminal_search");
+    setUniqueList('country', "country_search");
 }
 
 //converting strings to date
